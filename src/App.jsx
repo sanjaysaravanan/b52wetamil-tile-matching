@@ -1,25 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+
+function shuffle(array) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
 
 const data = [
   {
     id: "1",
-    image: "https://www.w3schools.com/howto/img_avatar.png",
+    image:
+      "https://as2.ftcdn.net/v2/jpg/00/68/65/13/1000_F_68651370_CVcQlAdJqvxtL8bIUm70UP1HwnFXOblQ.jpg",
     isOpen: false,
   },
   {
     id: "2",
-    image: "https://www.w3schools.com/howto/img_avatar.png",
+    image:
+      "https://as1.ftcdn.net/v2/jpg/00/69/54/22/1000_F_69542226_PC8tx6GxK8m2wM9rEm56s7lgaFmtEIiU.jpg",
     isOpen: false,
   },
   {
     id: "3",
-    image: "https://www.w3schools.com/howto/img_avatar.png",
+    image:
+      "https://as1.ftcdn.net/v2/jpg/00/69/54/22/1000_F_69542226_PC8tx6GxK8m2wM9rEm56s7lgaFmtEIiU.jpg",
     isOpen: false,
   },
   {
     id: "4",
-    image: "https://www.w3schools.com/howto/img_avatar.png",
+    image:
+      "https://t4.ftcdn.net/jpg/00/49/23/25/240_F_49232510_IarInMXjn3jJjog5jfOaJEmjBIX98y6G.jpg",
     isOpen: false,
   },
   {
@@ -29,7 +53,8 @@ const data = [
   },
   {
     id: "6",
-    image: "https://www.w3schools.com/howto/img_avatar.png",
+    image:
+      "https://t4.ftcdn.net/jpg/00/49/23/25/240_F_49232510_IarInMXjn3jJjog5jfOaJEmjBIX98y6G.jpg",
     isOpen: false,
   },
   {
@@ -39,18 +64,14 @@ const data = [
   },
   {
     id: "8",
-    image: "https://www.w3schools.com/howto/img_avatar.png",
-    isOpen: false,
-  },
-  {
-    id: "9",
-    image: "https://www.w3schools.com/howto/img_avatar.png",
+    image:
+      "https://as2.ftcdn.net/v2/jpg/00/68/65/13/1000_F_68651370_CVcQlAdJqvxtL8bIUm70UP1HwnFXOblQ.jpg",
     isOpen: false,
   },
 ];
 
 function App() {
-  const [imageStates, setImageStates] = useState(data);
+  const [imageStates, setImageStates] = useState([]);
 
   const [selectedImages, setSelectedImages] = useState({
     imageOne: null,
@@ -60,14 +81,14 @@ function App() {
   const setStatus = (index, status) => {
     const temp = [...imageStates];
 
-    temp[index].isOpen = true;
+    temp[index].isOpen = status;
 
     setImageStates(temp);
   };
 
   const clickCard = (card) => {
     const index = imageStates.findIndex((tile) => tile.id === card.id);
-    const { imageOne, imageTwo } = selectedImages;
+    const { imageOne } = selectedImages;
     if (selectedImages.imageOne) {
       setSelectedImages({
         ...selectedImages,
@@ -75,8 +96,8 @@ function App() {
       });
       setStatus(index, true);
 
-      setInterval(() => {
-        if (imageOne.image !== imageTwo.image) {
+      setTimeout(() => {
+        if (imageOne.image !== card.image) {
           setStatus(index, false);
           const indexOne = imageStates.findIndex(
             (tile) => tile.id === imageOne.id
@@ -87,7 +108,7 @@ function App() {
           imageOne: null,
           imageTwo: null,
         });
-      }, 2000);
+      }, 1000);
     } else {
       setSelectedImages({
         ...selectedImages,
@@ -96,6 +117,10 @@ function App() {
       setStatus(index, true);
     }
   };
+
+  useEffect(() => {
+    setImageStates(shuffle(data));
+  }, []);
 
   return (
     <>
